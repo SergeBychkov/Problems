@@ -1,7 +1,8 @@
 add_executable(main
   main.cpp
-  Algorithms/Strings/CommonChild.cpp
+  Algorithms/Search/CountLuck.cpp
   Algorithms/Strings/SherlockAndTheValidString.cpp
+  Algorithms/Strings/CommonChild.cpp
 )
 
 
