@@ -71,16 +71,16 @@ namespace {
     int cnt = 0;
     while (!stack.empty()) {
       cnt++;
-      auto currField = stack.back();
+      auto currSquare = stack.back();
       stack.pop_back();
-      int currSteps = desk[currField.first][currField.second].steps;
+      int currSteps = desk[currSquare.first][currSquare.second].steps;
 
-      if (currField == finish) {
-        desk[currField.first][currField.second].steps = currSteps;
+      if (currSquare == finish) {
+        desk[currSquare.first][currSquare.second].steps = currSteps;
         break;
       }
 
-      processFields(currField.first, currField.second, [&](int i, int j) {
+      processFields(currSquare.first, currSquare.second, [&](int i, int j) {
         if (desk[i][j].free) {
           if (desk[i][j].steps == 0) {
             desk[i][j].steps = currSteps + 1;
@@ -95,16 +95,16 @@ namespace {
     }
 
     //move back 
-    auto currField = finish;
+    auto currSquare = finish;
     int currSteps = desk[finish.first][finish.second].steps;
     vector<pair<int, int>> path;
     while (currSteps != 1) {
       int tempSteps = currSteps;
-      processFields(currField.first, currField.second, [&](int i, int j) {
+      processFields(currSquare.first, currSquare.second, [&](int i, int j) {
         if (desk[i][j].steps == tempSteps - 1) {
-          currField = {i, j};
+          currSquare = {i, j};
           currSteps = desk[i][j].steps;
-          path.push_back(currField);
+          path.push_back(currSquare);
         }
         }
       );
