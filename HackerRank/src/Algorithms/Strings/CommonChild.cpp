@@ -11,6 +11,35 @@
 using namespace std;
 
 namespace {
+
+  int commonChild(string s1_, string s2_) {
+    int size = min(s1_.size(), s2_.size());
+    vector<vector<int>> mat;
+    mat.resize(size, vector<int>(size, 0));
+    mat[0][0] = (s1_[0] == s2_[0]) ? 1 : 0;
+    for (size_t j = 1; j < size; j++) {
+      if (s1_[j] == s2_[0] || mat[0][j - 1] == 1 || mat[0][0] == 1)
+        mat[0][j] = 1;
+    }
+    for (size_t i = 1; i < size; i++) {
+      if (s2_[i] == s1_[0] || mat[i - 1][0] == 1 || mat[0][0] == 1)
+        mat[i][0] = 1;
+    }
+
+    for (size_t i = 1; i < size; i++) {
+      char fixChar = s2_[i];
+      for (size_t j = 1; j < size; j++) {
+        if (s1_[j] == fixChar) {
+          mat[i][j] = mat[i - 1][j - 1] + 1;
+        } else {
+          mat[i][j] = max(mat[i - 1][j], mat[i][j - 1]);
+        }
+      }
+    }
+    return mat[size - 1][size - 1];
+  }
+
+
   class CommonChild {
   public:
     CommonChild(const string& s1, const string& s2) : s1_{s1}, s2_{s2} {
@@ -19,65 +48,11 @@ namespace {
     }
 
 
-
     int work(bool verbose = false) {
-      int result{};
-      mat_[0][0] = (s1_[0] == s2_[0]) ? 1 : 0;
-      for (size_t j = 1; j < size_; j++) {
-        if (s1_[j] == s2_[0] || mat_[0][j - 1] == 1 || mat_[0][0] == 1)
-          mat_[0][j] = 1;
-      }
-      for (size_t i = 1; i < size_; i++) {
-        if (s2_[i] == s1_[0] || mat_[i - 1][0] == 1 || mat_[0][0] == 1)
-          mat_[i][0] = 1;
-      }
-
-      for (size_t i = 1; i < size_; i++) {
-        char fixChar = s2_[i];
-        for (size_t j = 1; j < size_; j++) {
-          if (s1_[j] == fixChar) {
-            mat_[i][j] = mat_[i - 1][j - 1] + 1;
-          } else {
-            mat_[i][j] = max(mat_[i - 1][j], mat_[i][j - 1]);
-          }
-        }
-      }
       if (verbose)
         printMatrix();
-
-      return mat_[size_ - 1][size_ - 1];
+      return commonChild(s1_, s2_);
     }
-
-
-
-    //for site
-    int commonChild(string s1_, string s2_) {
-      int size_ = min(s1_.size(), s2_.size());
-      vector<vector<int>> mat_;
-      mat_.resize(size_, vector<int>(size_, 0));
-      mat_[0][0] = (s1_[0] == s2_[0]) ? 1 : 0;
-      for (size_t j = 1; j < size_; j++) {
-        if (s1_[j] == s2_[0] || mat_[0][j - 1] == 1 || mat_[0][0] == 1)
-          mat_[0][j] = 1;
-      }
-      for (size_t i = 1; i < size_; i++) {
-        if (s2_[i] == s1_[0] || mat_[i - 1][0] == 1 || mat_[0][0] == 1)
-          mat_[i][0] = 1;
-      }
-
-      for (size_t i = 1; i < size_; i++) {
-        char fixChar = s2_[i];
-        for (size_t j = 1; j < size_; j++) {
-          if (s1_[j] == fixChar) {
-            mat_[i][j] = mat_[i - 1][j - 1] + 1;
-          } else {
-            mat_[i][j] = max(mat_[i - 1][j], mat_[i][j - 1]);
-          }
-        }
-      }
-      return mat_[size_ - 1][size_ - 1];
-    }
-
 
 
     void printMatrix() {
