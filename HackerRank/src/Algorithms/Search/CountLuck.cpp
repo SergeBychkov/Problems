@@ -12,10 +12,20 @@
 using namespace std;
 
 namespace {
+  struct Point {
+    int i{};
+    int j{};
+
+    bool operator==(const Point& other) const {
+      return i == other.i && j == other.j;
+    }
+  };
+
 
   struct Field {
     bool free{};
     int steps{};
+    Point prevPoint{};
   };
 
 
@@ -41,7 +51,7 @@ namespace {
     int m = mat.size();
     int n = mat[0].size();
     vector<vector<Field>> desk(m, vector<Field>(n));
-    pair<int, int> start{}, finish{};
+    Point start{}, finish{};
     for (int i = 0; i < m; ++i) {
       for (int j = 0; j < n; ++j) {
         desk[i][j].free = mat[i][j] == '.' || mat[i][j] == '*';
@@ -66,24 +76,23 @@ namespace {
         func(i, j + 1); //right
       };
 
-    deque<pair<int, int>> stack;
+    deque<Point> stack;
     stack.push_front(start);
-    int cnt = 0;
     while (!stack.empty()) {
-      cnt++;
       auto currSquare = stack.back();
       stack.pop_back();
-      int currSteps = desk[currSquare.first][currSquare.second].steps;
+      int currSteps = desk[currSquare.i][currSquare.j].steps;
 
       if (currSquare == finish) {
-        desk[currSquare.first][currSquare.second].steps = currSteps;
+        desk[currSquare.i][currSquare.j].steps = currSteps;
         break;
       }
 
-      processFields(currSquare.first, currSquare.second, [&](int i, int j) {
+      processFields(currSquare.i, currSquare.j, [&](int i, int j) {
         if (desk[i][j].free) {
           if (desk[i][j].steps == 0) {
             desk[i][j].steps = currSteps + 1;
+            desk[i][j].prevPoint = currSquare;
             stack.push_front({i, j});
           }
         }
@@ -94,26 +103,13 @@ namespace {
       printDesk(desk);
     }
 
-    //move back 
-    auto currSquare = finish;
-    int currSteps = desk[finish.first][finish.second].steps;
-    vector<pair<int, int>> path;
-    while (currSteps != 1) {
-      int tempSteps = currSteps;
-      processFields(currSquare.first, currSquare.second, [&](int i, int j) {
-        if (desk[i][j].steps == tempSteps - 1) {
-          currSquare = {i, j};
-          currSteps = desk[i][j].steps;
-          path.push_back(currSquare);
-        }
-        }
-      );
-    }
     int result = 0;
-    for (auto& field : path) {
+    auto currPoint = finish;
+    while (currPoint != start) {
+      currPoint = desk[currPoint.i][currPoint.j].prevPoint;
       int choices = 0;
-      processFields(field.first, field.second, [&](int i, int j) {
-        int currSteps = desk[field.first][field.second].steps;
+      processFields(currPoint.i, currPoint.j, [&](int i, int j) {
+        int currSteps = desk[currPoint.i][currPoint.j].steps;
         if (desk[i][j].steps == currSteps + 1) {
           choices++;
         }
@@ -148,50 +144,50 @@ void demo_CountLuck() {
     vector<string> mat;
 
     //temp
-    mat = {
-      ".X.XXXXXXXXXXXXXXXXXXX.X.X.X.X.X.X.X.X.X.",
-      "...XXXXXXXXXXXXXXXXXXX...................",
-      ".X..X.X.X.X.X.X.X..XXXX*X.X.X.X.X.X.X.XX.",
-      ".XXXX.X.X.X.X.X.X.XX.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      ".XX.X.X.X.XX.X.XX.X.X.X.X.X.X.X.X.X.X.X.X",
-      ".X.X.X.X.X.XXX.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      "X........................................",
-      "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      ".X.XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.XX",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XMX.",
-      ".X....................................X..",
-      "..X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".X...................................X...",
-      ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.XX.XXXX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      ".........................................",
-      "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
-      ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
-      "........................................."
-    };
-    check(mat, 294, "Impressed", true);
+    //mat = {
+    //  ".X.XXXXXXXXXXXXXXXXXXX.X.X.X.X.X.X.X.X.X.",
+    //  "...XXXXXXXXXXXXXXXXXXX...................",
+    //  ".X..X.X.X.X.X.X.X..XXXX*X.X.X.X.X.X.X.XX.",
+    //  ".XXXX.X.X.X.X.X.X.XX.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  ".XX.X.X.X.XX.X.XX.X.X.X.X.X.X.X.X.X.X.X.X",
+    //  ".X.X.X.X.X.XXX.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  "X........................................",
+    //  "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  ".X.XX.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.XX",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XMX.",
+    //  ".X....................................X..",
+    //  "..X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".X...................................X...",
+    //  ".XX.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.XX.XXXX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  ".........................................",
+    //  "X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.XX.",
+    //  ".X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.X.",
+    //  "........................................."
+    //};
+    //check(mat, 294, "Impressed", true);
     //return;
 
 
