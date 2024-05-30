@@ -79,20 +79,20 @@ namespace {
     deque<Point> stack;
     stack.push_front(start);
     while (!stack.empty()) {
-      auto currSquare = stack.back();
+      auto currPoint = stack.back();
       stack.pop_back();
-      int currSteps = desk[currSquare.i][currSquare.j].steps;
+      int currSteps = desk[currPoint.i][currPoint.j].steps;
 
-      if (currSquare == finish) {
-        desk[currSquare.i][currSquare.j].steps = currSteps;
+      if (currPoint == finish) {
+        desk[currPoint.i][currPoint.j].steps = currSteps;
         break;
       }
 
-      processFields(currSquare.i, currSquare.j, [&](int i, int j) {
+      processFields(currPoint.i, currPoint.j, [&](int i, int j) {
         if (desk[i][j].free) {
           if (desk[i][j].steps == 0) {
             desk[i][j].steps = currSteps + 1;
-            desk[i][j].prevPoint = currSquare;
+            desk[i][j].prevPoint = currPoint;
             stack.push_front({i, j});
           }
         }
