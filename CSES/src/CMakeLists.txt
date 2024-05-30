@@ -43,7 +43,6 @@ add_executable(main
   DynamicProgramming/IncreasingSubsequence.cpp
   DynamicProgramming/Projects.cpp
 
-  Utils/demo_print_utils.cpp
 )
 
 
