@@ -3,7 +3,8 @@ using namespace std;
 
 /// Algorithms/Search
 void demo_CountLuck();
- 
+void demo_MinimumLoss();
+
 /// Algorithms/Strings/
 void demo_CommonChild();
 void demo_SherlockAndTheValidString();
@@ -11,7 +12,8 @@ void demo_SherlockAndTheValidString();
 int main() {
   try {
     /// Algorithms/Search
-    demo_CountLuck();
+    //demo_CountLuck();
+    demo_MinimumLoss();
 
     /// Algorithms/Strings/
     //demo_CommonChild();
