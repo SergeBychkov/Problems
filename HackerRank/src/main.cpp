@@ -3,6 +3,7 @@ using namespace std;
 
 /// Algorithms/Search
 void demo_CountLuck();
+void demo_CutTheTree();
 void demo_MinimumLoss();
 
 /// Algorithms/Strings/
@@ -13,7 +14,8 @@ int main() {
   try {
     /// Algorithms/Search
     //demo_CountLuck();
-    demo_MinimumLoss();
+    demo_CutTheTree();
+    //demo_MinimumLoss();
 
     /// Algorithms/Strings/
     //demo_CommonChild();
