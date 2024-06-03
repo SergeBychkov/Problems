@@ -25,9 +25,6 @@ namespace {
 
 
   void check(int k, vector<int> arr, int expected, bool verbose = false) {
-    if (verbose) {
-      //println("checking ...");
-    }
     auto result = pairs(k, arr, verbose);
     if (result != expected) {
       println("Error with result = {}, expected = {}", result, expected);
@@ -43,6 +40,7 @@ void demo_Pairs() {
     println("demo_Pairs started ...\n");
 
     check(1, {1, 2, 3, 4}, 3, true);
+    check(1, {1, 2, 3, 4, 4}, 4, true);
 
 
 

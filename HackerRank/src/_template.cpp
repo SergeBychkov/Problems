@@ -36,7 +36,7 @@ namespace {
 
 
 
-void demo_QqqVova() {
+void _main() {
   try {
     println("demo_QqqVova started ...\n");
 
