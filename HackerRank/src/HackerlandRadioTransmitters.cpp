@@ -25,27 +25,45 @@ namespace {
     }
 
     int result = 0;
-    bool searchingTransmitter = true;
-    int firstUncovered = 0;
-    int lastTransmitter = -1;
-
-    for (int i = 0; i < size; i++) {
-      if (searchingTransmitter) {
-        if (vec[i] - vec[firstUncovered] >= k) //???
+    int uncovered = 0;
+    int transmitter = -1;
+    int i = -1;
+    while (true) {
+      //searching transmitter
+      if (uncovered == size - 1)
+        return result + 1;
+      i = uncovered + 1;
+      while (true) {
+        if (vec[i] - vec[uncovered] < k) {
+          i++;
+          if (i == size - 1) {
+            return (vec[i] - vec[uncovered] < k) ? result + 2 : result + 1;
+          };
           continue;
-        lastTransmitter = i - 1;  //found
-        firstUncovered = i;
+        }
+        transmitter = i;  //found
         result++;
-        searchingTransmitter = false;
-      } else {
-        if (vec[i] - vec[lastTransmitter] < k)
+        break;
+      }
+
+      //searching uncovered
+      if (transmitter == size - 1)
+        return result;
+      i = transmitter + 1;
+      while (true) {
+        if (vec[i] - vec[transmitter] < k) {
+          i++;
+          if (i == size - 1) {
+            return (vec[i] - vec[transmitter] < k) ? result : result + 1;
+          }
           continue;
-        firstUncovered = i;     //found
-        searchingTransmitter = true;
+        }
+        uncovered = i - 1;    //found
+        break;
       }
 
       if (verbose) {
-        println("lastTransmitter = {}, firstUncovered == {}", lastTransmitter, firstUncovered);
+        println("i = {}, transmitter = {}, uncovered = {}", i, transmitter, uncovered);
       }
     }
 
