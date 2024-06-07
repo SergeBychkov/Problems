@@ -13,20 +13,19 @@ using namespace std;
 
 namespace {
 
-  int solve(/*  */ bool verbose = false) {
-
-
-
-    return 0;
+  int pairs(int k, vector<int> arr, bool verbose = false) {
+    multiset<int> arrSet(arr.begin(), arr.end());
+    int result = 0;
+    for (auto item : arrSet) {
+      result += arrSet.count(item - k);
+    }
+    return result;
   }
 
 
 
-  void check(/*  */ int expected, bool verbose = false) {
-    if (verbose) {
-      println("checking ...");
-    }
-    auto result = solve(verbose);
+  void check(int k, vector<int> arr, int expected, bool verbose = false) {
+    auto result = pairs(k, arr, verbose);
     if (result != expected) {
       println("Error with result = {}, expected = {}", result, expected);
       throw exception("Error!");
@@ -36,11 +35,12 @@ namespace {
 
 
 
-void _main() {
+void demo_Pairs() {
   try {
-    println("demo_QqqVova started ...\n");
+    println("demo_Pairs started ...\n");
 
-    check(/*  */ 0, true);
+    check(1, {1, 2, 3, 4}, 3, true);
+    check(1, {1, 2, 3, 4, 4}, 4, true);
 
 
 

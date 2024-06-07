@@ -1,9 +1,5 @@
-add_executable(main
-  main.cpp
-  Algorithms/Search/CountLuck.cpp
-  Algorithms/Search/MinimumLoss.cpp
-  Algorithms/Strings/SherlockAndTheValidString.cpp
-  Algorithms/Strings/CommonChild.cpp
-)
+file(GLOB CHAPTER_SRC_FILES "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp")
 
+add_executable(main ${CHAPTER_SRC_FILES})
 
+ 
