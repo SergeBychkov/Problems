@@ -1,7 +1,7 @@
 //https:
 
 #include <print>
-#include <vector>
+#include <vec_tor>
 #include <deque>
 #include <algorithm>
 #include <ranges>
@@ -19,45 +19,27 @@ namespace {
     Node* right{};
   };
 
-
-  Node* insert(Node* root, int data) {
-    if (root == NULL) {
-      return new Node();
-    } else {
-      Node* cur;
-      if (data <= root->data) {
-        cur = insert(root->left, data);
-        root->left = cur;
-      } else {
-        cur = insert(root->right, data);
-        root->right = cur;
-      }
-
-      return root;
-    }
-  }
-
-  vector<int> vec;
+  vector<int> vec_;
 
   void inOrderTraversal(Node* root) {
     if (root != nullptr) {
       inOrderTraversal(root->left);
-      vec.push_back(root->data);
+      vec_.push_back(root->data);
       inOrderTraversal(root->right);
     }
   }
 
 
   bool checkBST(Node* root) {
-    vec.clear();
+    vec_.clear();
     if (root != nullptr) {
       inOrderTraversal(root->left);
-      vec.push_back(root->data);
+      vec_.push_back(root->data);
       inOrderTraversal(root->right);
     }
-    //Print::printVector(vec);
-    for (size_t i = 0; i < vec.size() - 1; i++) {
-      if (vec[i] > vec[i + 1])
+    //Print::printVector(vec_);
+    for (size_t i = 0; i < vec_.size() - 1; i++) {
+      if (vec_[i] >= vec_[i + 1])
         return false;
     }
     return true;
@@ -88,12 +70,6 @@ void main() {
     root->right->left ->data = 6;
 
     println("checkBST = {}", checkBST(root));
-
-    //2
-    //1 2 2 4 5 6 7
-    //Expected Output
-    //No
-
 
     println("\nAll tests passed!");
   } catch (exception ex) {
