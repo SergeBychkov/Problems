@@ -23,9 +23,6 @@ namespace {
 
 
   void check(/*  */ int expected, bool verbose = false) {
-    if (verbose) {
-      println("checking ...");
-    }
     auto result = solve(verbose);
     if (result != expected) {
       println("Error with result = {}, expected = {}", result, expected);

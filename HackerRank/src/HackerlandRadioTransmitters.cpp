@@ -83,7 +83,7 @@ namespace {
 
 
 
-void main_() {
+void main() {
   try {
     println("HackerlandRadioTransmitters started ...\n");
 
