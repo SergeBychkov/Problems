@@ -118,7 +118,7 @@ namespace Print {
           print("{}", formatStringWithWidth(i, width));
         }
       }
-      print("\n");
+      print(" - indexes\n");
 
     }
   }
