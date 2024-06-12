@@ -177,6 +177,15 @@ namespace Print {
 
 
   template<typename K, typename V>
+  inline void printSet(unordered_set<K, V> map, int width = 8) { //to do
+    for (const auto& item : map) {
+      print("{}, ", item);
+    }
+    print("\n");
+  }
+
+
+  template<typename K, typename V>
   inline void printSet(unordered_multiset<K, V> map, int width = 8) { //to do
     for (const auto& item : map) {
       print("{}, ", item);
